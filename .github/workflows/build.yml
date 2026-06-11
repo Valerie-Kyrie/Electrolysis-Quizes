@@ -1,0 +1,53 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - run: |
+          pyinstaller --onefile \
+            --add-data "data/electrolysis.db:data" \
+            main.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Linux-Build
+          path: dist/*
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - run: |
+          pyinstaller --onefile --windowed main.py --add-data "data/electrolysis.db;data"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Windows-Build
+          path: dist/*
