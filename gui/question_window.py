@@ -96,7 +96,7 @@ class QuestionWindow(QMainWindow):
         else:
             self.questions = get_questions_by_chapter(chapter_id)
 
-        for question in questions:
+        for question in self.questions:
 
             question_id = question[0]
             text = question[1]
