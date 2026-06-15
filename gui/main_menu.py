@@ -10,12 +10,17 @@ from PyQt6.QtWidgets import (
 
 from gui.main_window import MainWindow
 from gui.quiz_window import QuizWindow
+from gui.about_window import AboutWindow
+from PyQt6.QtGui import QIcon
 
 
 class MainMenuWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.setWindowIcon(
+            QIcon("assets/icon.png")
+        )
         self.setWindowTitle("Electrolysis Quiz System")
         self.resize(600, 400)
 
@@ -25,17 +30,20 @@ class MainMenuWindow(QMainWindow):
         self.start_quiz_btn = QPushButton("Start Quiz (Chapter Select)")
         self.all_quiz_btn = QPushButton("All Chapters Quiz")
         self.manage_btn = QPushButton("Manage Chapters && Questions")
+        self.about_btn = QPushButton("About")
 
         # connect buttons to actions
         self.start_quiz_btn.clicked.connect(self.open_quiz)
         self.all_quiz_btn.clicked.connect(self.all_quiz_placeholder)
         self.manage_btn.clicked.connect(self.open_manage)
+        self.about_btn.clicked.connect(self.open_about)
 
         # layout
         layout = QVBoxLayout()
         layout.addWidget(self.start_quiz_btn)
         layout.addWidget(self.all_quiz_btn)
         layout.addWidget(self.manage_btn)
+        layout.addWidget(self.about_btn)
 
         container = QWidget()
         container.setLayout(layout)
@@ -61,3 +69,7 @@ class MainMenuWindow(QMainWindow):
     def open_manage(self):
         self.manage_window = MainWindow()
         self.manage_window.show()
+
+    def open_about(self):
+        self.about = AboutWindow()
+        self.about.show()

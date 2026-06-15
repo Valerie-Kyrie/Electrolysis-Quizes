@@ -15,6 +15,12 @@ def main():
 
     app = QApplication(sys.argv)
 
+    from PyQt6.QtGui import QIcon
+
+    app.setWindowIcon(
+        QIcon("assets/icon.png")
+    )
+
     window = MainMenuWindow()
     window.show()
 
