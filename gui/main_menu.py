@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
     QPushButton
 )
 
-from gui.question_window import QuestionWindow
+from gui.main_window import MainWindow
 from gui.quiz_window import QuizWindow
 
 
@@ -16,7 +16,6 @@ class MainMenuWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-
         self.setWindowTitle("Electrolysis Quiz System")
         self.resize(600, 400)
 
@@ -24,8 +23,8 @@ class MainMenuWindow(QMainWindow):
         # Buttons
         # -----------------------
         self.start_quiz_btn = QPushButton("Start Quiz (Chapter Select)")
-        self.all_quiz_btn = QPushButton("All Chapters Quiz (Coming Soon)")
-        self.manage_btn = QPushButton("Manage Chapters & Questions")
+        self.all_quiz_btn = QPushButton("All Chapters Quiz")
+        self.manage_btn = QPushButton("Manage Chapters && Questions")
 
         # connect buttons to actions
         self.start_quiz_btn.clicked.connect(self.open_quiz)
@@ -60,5 +59,5 @@ class MainMenuWindow(QMainWindow):
         self.quiz_window.show()
 
     def open_manage(self):
-        self.manage_window = QuestionWindow()
+        self.manage_window = MainWindow()
         self.manage_window.show()

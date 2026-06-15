@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle(
-            "Electrolysis Quiz System"
+            "Chapter & Question Manager"
         )
 
         self.resize(1000, 700)
@@ -73,11 +73,7 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(add_button)
         button_layout.addWidget(edit_button)
         button_layout.addWidget(delete_button)
-        button_layout.addWidget(questions_button) 
-        quiz_button = QPushButton("Start Quiz")
-        quiz_button.clicked.connect(self.start_quiz)
-
-        button_layout.addWidget(quiz_button)  
+        button_layout.addWidget(questions_button)  
 
         layout = QVBoxLayout()
         layout.addWidget(self.chapter_table)
@@ -240,15 +236,3 @@ class MainWindow(QMainWindow):
         )
 
         self.q_window.show()
-
-    def start_quiz(self):
-
-        chapter = self.get_selected_chapter()
-
-        if not chapter:
-            return
-
-        chapter_id, _, _ = chapter
-
-        self.quiz = QuizWindow(chapter_id)
-        self.quiz.show()

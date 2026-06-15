@@ -43,8 +43,11 @@ class QuizWindow(QMainWindow):
         self.score = 0
         self.question_correct = True
 
+        self.wrong_questions = []
+
         self.checkboxes = []
-        
+
+        self.progress_label = QLabel()        
 
         self.question_label = QLabel()
         self.question_label.setWordWrap(True)
@@ -59,6 +62,7 @@ class QuizWindow(QMainWindow):
         self.end_btn.clicked.connect(self.end_quiz)
 
         main_layout = QVBoxLayout()
+        main_layout.addWidget(self.progress_label)
         main_layout.addWidget(self.question_label)
 
         main_layout.addWidget(self.answer_container)
@@ -89,6 +93,10 @@ class QuizWindow(QMainWindow):
             return
 
         question_id, text, page, qtype = self.questions[self.current_index]
+        self.progress_label.setText(
+            f"Question {self.current_index + 1} / {len(self.questions)}"
+        
+        )
 
         self.question_label.setText(text)
 
@@ -152,6 +160,14 @@ class QuizWindow(QMainWindow):
         # update score
         if all_correct:
             self.score += 1
+        else:
+            self.wrong_questions.append(
+                (
+                    question_id,
+                    text,
+                    page
+                )
+            )
 
         # show structured feedback window
         from gui.answer_feedback import AnswerFeedback
@@ -189,27 +205,61 @@ class QuizWindow(QMainWindow):
 
     def finish_quiz(self):
 
-        QMessageBox.information(
+        reply = QMessageBox.question(
             self,
-            "Finished",
-            f"Score: {self.score} / {len(self.questions)}"
+            "Quiz Complete",
+            f"Score: {self.score} / {len(self.questions)}\n\n"
+            f"Wrong Questions: {len(self.wrong_questions)}\n\n"
+            f"Review wrong questions?",
+            QMessageBox.StandardButton.Yes
+            |
+            QMessageBox.StandardButton.No
         )
+
+        if reply == QMessageBox.StandardButton.Yes:
+
+            from gui.review_window import ReviewWindow
+
+            self.review_window = ReviewWindow(
+                self.wrong_questions
+            )
+
+            self.review_window.show()
 
         self.close()
     
     def end_quiz(self):
 
-        answered = self.current_index  # how many completed
+        answered = self.current_index
 
         if answered == 0:
-            QMessageBox.information(self, "Quiz Ended", "No questions answered.")
+            QMessageBox.information(
+                self,
+                "Quiz Ended",
+                "No questions answered."
+            )
             self.close()
             return
 
-        QMessageBox.information(
+        reply = QMessageBox.question(
             self,
             "Quiz Ended",
-            f"You got {self.score} / {answered} correct"
+            f"You got {self.score} / {answered} correct\n\n"
+            f"Wrong Questions: {len(self.wrong_questions)}\n\n"
+            f"Review wrong questions?",
+            QMessageBox.StandardButton.Yes
+            |
+            QMessageBox.StandardButton.No
         )
+
+        if reply == QMessageBox.StandardButton.Yes:
+
+            from gui.review_window import ReviewWindow
+
+            self.review_window = ReviewWindow(
+                self.wrong_questions
+            )
+
+            self.review_window.show()
 
         self.close()
